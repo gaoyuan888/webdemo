@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yyz1.dao.source1.ItemsMapper" >
+
+    <resultMap id="BaseResultMap" type="com.yyz1.domain.Items" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="price" property="price" jdbcType="REAL" />
+        <result column="detail" property="detail" jdbcType="LONGVARCHAR" />
+        <result column="pic" property="pic" jdbcType="VARCHAR" />
+        <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, name, price, detail, pic, createtime
+    </sql>
+
+    <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select
+        <include refid="Base_Column_List" />
+        from items
+    </select>
+
+    <!--<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >-->
+    <!--select -->
+    <!--<include refid="Base_Column_List" />-->
+    <!--from items-->
+    <!--where id = #{id,jdbcType=INTEGER}-->
+    <!--</select>-->
+
+
+    <!--<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >-->
+        <!--delete from items-->
+        <!--where id = #{id,jdbcType=INTEGER}-->
+    <!--</delete>-->
+
+    <!--<insert id="insert" parameterType="com.zyx.model.Items" >-->
+        <!--insert into items (id, name, price, -->
+            <!--detail, pic, createtime-->
+            <!--)-->
+        <!--values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{price,jdbcType=REAL}, -->
+            <!--#{detail,jdbcType=LONGVARCHAR}, #{pic,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}-->
+            <!--)-->
+    <!--</insert>-->
+
+    <!--<insert id="insertSelective" parameterType="com.zyx.model.Items" >-->
+        <!--insert into items-->
+        <!--<trim prefix="(" suffix=")" suffixOverrides="," >-->
+            <!--<if test="id != null" >-->
+                <!--id,-->
+            <!--</if>-->
+            <!--<if test="name != null" >-->
+                <!--name,-->
+            <!--</if>-->
+            <!--<if test="price != null" >-->
+                <!--price,-->
+            <!--</if>-->
+            <!--<if test="detail != null" >-->
+                <!--detail,-->
+            <!--</if>-->
+            <!--<if test="pic != null" >-->
+                <!--pic,-->
+            <!--</if>-->
+            <!--<if test="createtime != null" >-->
+                <!--createtime,-->
+            <!--</if>-->
+        <!--</trim>-->
+        <!--<trim prefix="values (" suffix=")" suffixOverrides="," >-->
+            <!--<if test="id != null" >-->
+                <!--#{id,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="name != null" >-->
+                <!--#{name,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="price != null" >-->
+                <!--#{price,jdbcType=REAL},-->
+            <!--</if>-->
+            <!--<if test="detail != null" >-->
+                <!--#{detail,jdbcType=LONGVARCHAR},-->
+            <!--</if>-->
+            <!--<if test="pic != null" >-->
+                <!--#{pic,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="createtime != null" >-->
+                <!--#{createtime,jdbcType=TIMESTAMP},-->
+            <!--</if>-->
+        <!--</trim>-->
+    <!--</insert>-->
+
+    <!--<update id="updateByPrimaryKeySelective" parameterType="com.zyx.model.Items" >-->
+        <!--update items-->
+        <!--<set >-->
+            <!--<if test="name != null" >-->
+                <!--name = #{name,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="price != null" >-->
+                <!--price = #{price,jdbcType=REAL},-->
+            <!--</if>-->
+            <!--<if test="detail != null" >-->
+                <!--detail = #{detail,jdbcType=LONGVARCHAR},-->
+            <!--</if>-->
+            <!--<if test="pic != null" >-->
+                <!--pic = #{pic,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="createtime != null" >-->
+                <!--createtime = #{createtime,jdbcType=TIMESTAMP},-->
+            <!--</if>-->
+        <!--</set>-->
+        <!--where id = #{id,jdbcType=INTEGER}-->
+    <!--</update>-->
+
+    <!--<update id="updateByPrimaryKey" parameterType="com.zyx.model.Items" >-->
+        <!--update items-->
+        <!--set name = #{name,jdbcType=VARCHAR},-->
+            <!--price = #{price,jdbcType=REAL},-->
+            <!--detail = #{detail,jdbcType=LONGVARCHAR},-->
+            <!--pic = #{pic,jdbcType=VARCHAR},-->
+            <!--createtime = #{createtime,jdbcType=TIMESTAMP}-->
+        <!--where id = #{id,jdbcType=INTEGER}-->
+    <!--</update>-->
+</mapper>
