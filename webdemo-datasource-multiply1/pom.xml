@@ -165,6 +165,20 @@
         <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
             <plugins>
                 <plugin>
+                    <groupId>org.apache.tomcat.maven</groupId>
+                    <artifactId>tomcat7-maven-plugin</artifactId>
+                    <version>2.2</version>
+                    <configuration>
+                        <!-- 注意此处的url -->
+                        <!--  <url>http://localhost:18080/manager/text</url> --><!--部署到本地tomcat7-->
+                        <url>http://154.8.138.197:8080/manager/text</url>
+                        <server>tomcat7</server> <!-- 此处的名字必须和setting.xml中配置的ID一致 -->
+                        <path>/webdemo-datasource-multiply1</path>  <!-- 此处的名字是项目发布的工程名 -->
+                        <!--<username>tomcat</username>--><!--settings.xml文件已配置，此处可不配-->
+                        <!--<password>tomcat</password>--><!--settings.xml文件已配置，此处可不配-->
+                    </configuration>
+                </plugin>
+                <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>3.0.0</version>
                 </plugin>
