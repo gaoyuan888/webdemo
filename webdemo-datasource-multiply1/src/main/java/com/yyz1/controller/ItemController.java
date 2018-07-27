@@ -43,4 +43,11 @@ public class ItemController {
         // 返回结果
         return modelAndView;
     }
+
+    @RequestMapping("/zoomify")
+    public ModelAndView getImg() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("zoomify");
+        return modelAndView;
+    }
 }
