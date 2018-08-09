@@ -11,6 +11,7 @@
     <modules>
         <module>webdemo-datasource-multiply</module>
         <module>webdemo-datasource-multiply1</module>
+        <module>webdemo-elasticsearch</module>
     </modules>
 
 </project>
