@@ -6,7 +6,6 @@ import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.get.MultiGetItemResponse;
-import org.elasticsearch.action.get.MultiGetRequest;
 import org.elasticsearch.action.get.MultiGetResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
@@ -22,6 +21,9 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.aggregations.AggregationBuilder;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.metrics.cardinality.Cardinality;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.junit.After;
 import org.junit.Before;
@@ -40,9 +42,7 @@ import java.util.Map;
 public class EsCrudDemo {
 
     private static String host = "47.100.206.216"; // 服务器地址
-
     private static int port = 9300; // 端口
-
     private TransportClient client = null;
 
     /**
@@ -83,6 +83,7 @@ public class EsCrudDemo {
                         .startObject()
                         .field("user", "kimchy")
                         .field("postDate", new Date())
+                        .field("age", 12)
                         .field("message", "trying out Elasticsearch")
                         .endObject()
                 )
@@ -211,15 +212,9 @@ public class EsCrudDemo {
     }
 
     /**
-     * 查找
+     * 批量查詢
      */
-    @Test
-    public void testGet() {
-        GetResponse getResponse = client.prepareGet("twitter", "tweet", "2").get();
-        System.out.println(getResponse.getSourceAsString());
-    }
 
-    //    批量查詢
     @Test
     public void testMget() {
         MultiGetResponse response = client.prepareMultiGet()
@@ -234,25 +229,63 @@ public class EsCrudDemo {
         }
     }
 
-    //bulk批量增刪改
+    /**
+     * bulk批量增刪改
+     */
+
     @Test
     public void testBulk() throws Exception {
         BulkRequestBuilder bulkRequestBuilder = client.prepareBulk();
         bulkRequestBuilder.add(
-                client.prepareIndex("twitter", "tweet", "3")
+                client.prepareIndex("twitter", "tweet", "1")
                         .setSource(
-                                XContentFactory.jsonBuilder().startObject()
-                                        .field("user", "dds")
-                                        .field("postDate", "2018-09-09")
+                                XContentFactory.jsonBuilder()
+                                        .startObject()
+                                        .field("user", "zhangsan")
+                                        .field("postDate", new Date())
+                                        .field("age", 12)
+                                        .field("interest","changge tiaowu hejiu chouyan")
+                                        .field("message", "trying out Elasticsearch")
+                                        .endObject()
+                        )
+        );
+        bulkRequestBuilder.add(
+                client.prepareIndex("twitter", "tweet", "2")
+                        .setSource(
+                                XContentFactory.jsonBuilder()
+                                        .startObject()
+                                        .field("user", "lisi")
+                                        .field("postDate", "2010-02-02")
+                                        .field("age", 13)
+                                        .field("interest","changge tiaowu biancheng hejiu chouyan")
+                                        .field("message", "trying out Elasticsearch")
                                         .endObject()
                         )
         );
         bulkRequestBuilder.add(
                 client.prepareIndex("twitter", "tweet", "3")
                         .setSource(
-                                XContentFactory.jsonBuilder().startObject()
-                                        .field("user", "123s")
-                                        .field("postDate", "2018-09-09")
+                                XContentFactory.jsonBuilder()
+                                        .startObject()
+                                        .field("user", "wangwu")
+                                        .field("postDate", "2000-02-02")
+                                        .field("age", 14)
+                                        .field("interest","changge tiaowu shuijiao hejiu chouyan")
+                                        .field("message", "trying out Elasticsearch")
+                                        .endObject()
+                        )
+        );
+
+        bulkRequestBuilder.add(
+                client.prepareIndex("twitter", "tweet", "4")
+                        .setSource(
+                                XContentFactory.jsonBuilder()
+                                        .startObject()
+                                        .field("user", "zhaoliu")
+                                        .field("postDate","1990-02-02")
+                                        .field("age", 15)
+                                        .field("interest","changge tiaowu dajia hejiu chouyan")
+                                        .field("message", "trying out Elasticsearch")
                                         .endObject()
                         )
         );
@@ -260,8 +293,20 @@ public class EsCrudDemo {
         System.out.println(responses.status());
     }
 
+    /**
+     * 查找
+     */
     @Test
-    public void testQuery(){
+    public void testGet() {
+        GetResponse getResponse = client.prepareGet("twitter", "tweet", "2").get();
+        System.out.println(getResponse.getSourceAsString());
+    }
+
+    /**
+     * 条件查询相关
+     */
+    @Test
+    public void testQuery() {
 
         //term查询
 //        QueryBuilder builder=QueryBuilders.termQuery("user","123s");
@@ -291,7 +336,24 @@ public class EsCrudDemo {
 //        QueryBuilder builder=QueryBuilders.typeQuery("tweet");
 
         //ids查询---
-        QueryBuilder builder=QueryBuilders.idsQuery().addIds("1","3");
+//        QueryBuilder builder = QueryBuilders.idsQuery().addIds("1", "3");
+
+        // commonTerms查询
+//        QueryBuilder builder=QueryBuilders.commonTermsQuery("user","kimchy");
+
+        // queryString查询----有唱歌但是没有打架
+//        QueryBuilder builder=QueryBuilders.queryStringQuery("+hejiu -dajia");
+
+        //constantScore查询--不计算相关度分数
+        QueryBuilder builder=QueryBuilders.constantScoreQuery(QueryBuilders.termQuery("user","zhaoliu"));
+
+
+        // bool组合查询
+//          QueryBuilder builder=QueryBuilders.boolQuery()
+//                .must(QueryBuilders.matchQuery("interest","changge"))
+//                .mustNot(QueryBuilders.matchQuery("interest","biancheng"))
+//                .should(QueryBuilders.matchQuery("user","zhangsan"))
+//                .filter(QueryBuilders.rangeQuery("postDate").gte("2001-01-01").format("yyyy-MM-dd"));
 
 
         SearchResponse response = client.prepareSearch("twitter")
@@ -303,10 +365,48 @@ public class EsCrudDemo {
         for (SearchHit hit : hits) {
             Map<String, Object> map = hit.getSourceAsMap();
             for (String key : map.keySet()) {
-                System.out.println(key+":"+map.get(key));
+                System.out.println(key + ":" + map.get(key));
             }
             System.out.println("==============*==============");
         }
+    }
+
+    /**
+     * 聚合查询相关
+     */
+
+    @Test
+    public void testAggre() {
+        //获取最大值
+//        AggregationBuilder agg= AggregationBuilders.max("aggMax").field("age");
+//        SearchResponse response=client.prepareSearch("twitter").addAggregation(agg).get();
+//        Max max=response.getAggregations().get("aggMax");
+//        System.out.println(max.getValue());
+
+        //获取最小值
+//        AggregationBuilder agg = AggregationBuilders.min("aggMin").field("age");
+//        SearchResponse response = client.prepareSearch("twitter").addAggregation(agg).get();
+//        Min min = response.getAggregations().get("aggMin");
+//        System.out.println(min.getValue());
+
+        //获取平均值
+//        AggregationBuilder agg = AggregationBuilders.avg("aggAvg").field("age");
+//        SearchResponse response = client.prepareSearch("twitter").addAggregation(agg).get();
+//        Avg avg = response.getAggregations().get("aggAvg");
+//        System.out.println(avg.getValue());
+
+        //获取和
+//        AggregationBuilder agg = AggregationBuilders.sum("aggSum").field("age");
+//        SearchResponse response = client.prepareSearch("twitter").addAggregation(agg).get();
+//        Sum sum = response.getAggregations().get("aggSum");
+//        System.out.println(sum.getValue());
+
+        //获取和
+        AggregationBuilder agg = AggregationBuilders.cardinality("aggCard").field("age");
+        SearchResponse response = client.prepareSearch("twitter").addAggregation(agg).get();
+        Cardinality card = response.getAggregations().get("aggCard");
+        System.out.println(card.getValue());
+
     }
 
 }
