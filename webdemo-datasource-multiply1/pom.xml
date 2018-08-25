@@ -174,8 +174,8 @@
                         <url>http://154.8.138.197:8080/manager/text</url>
                         <server>tomcat7</server> <!-- 此处的名字必须和setting.xml中配置的ID一致 -->
                         <path>/webdemo-datasource-multiply1</path>  <!-- 此处的名字是项目发布的工程名 -->
-                        <!--<username>tomcat</username>--><!--settings.xml文件已配置，此处可不配-->
-                        <!--<password>tomcat</password>--><!--settings.xml文件已配置，此处可不配-->
+                        <username>tomcat</username>
+                        <password>tomcat</password>
                     </configuration>
                 </plugin>
                 <plugin>

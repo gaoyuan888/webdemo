@@ -7,7 +7,7 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
@@ -42,7 +42,7 @@ public class EsCrudDemo {
     @Before
     public void getCient() throws Exception {
         client = new PreBuiltTransportClient(Settings.EMPTY)
-                .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(EsCrudDemo.host), EsCrudDemo.port));
+                .addTransportAddress(new TransportAddress(InetAddress.getByName(EsCrudDemo.host), EsCrudDemo.port));
     }
 
     /**

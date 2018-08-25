@@ -5,7 +5,6 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.io.stream.StreamOutput;
 import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
@@ -25,7 +24,7 @@ public class EsDemo {
 
         //访问es 服务器的客户端
         TransportClient client = new PreBuiltTransportClient(settings)
-                .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("47.100.206.216"), 9300));
+                .addTransportAddress(new TransportAddress(InetAddress.getByName("47.100.206.216"), 9300));
 
         //数据查询
         GetResponse response = client.prepareGet("myindex", "user", "1").execute().actionGet();
