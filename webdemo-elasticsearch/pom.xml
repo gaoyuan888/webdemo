@@ -58,11 +58,11 @@
         </dependency>
 
         <!--elasticSearch 客户端-->
-        <dependency>
-            <groupId>org.elasticsearch.client</groupId>
-            <artifactId>transport</artifactId>
-            <version>5.5.2</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.elasticsearch.client</groupId>-->
+            <!--<artifactId>transport</artifactId>-->
+            <!--<version>5.5.2</version>-->
+        <!--</dependency>-->
         <!-- Apache工具组件 -->
         <dependency>
             <groupId>org.apache.commons</groupId>
